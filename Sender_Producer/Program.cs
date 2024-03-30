@@ -34,8 +34,8 @@ string QueueName = "zljn7vcbl3t28usw";
 * اگر می خواهید صف به طور خودکار پس از قطع شدن اتصال به سرور RabbitMQ حذف شود، می توانید `durable` را `false` تنظیم کنید.
 
  */
-channel.QueueDeclare(QueueName, true, false, true, null);
-while (true)
+channel.QueueDeclare(QueueName, true, false, false, null);
+for (int i = 0; i < 1000000; i++)
 {
     string message = $"This is a test meassage from my sender at :{DateTime.Now.Ticks}";
     var body = Encoding.UTF8.GetBytes(message);

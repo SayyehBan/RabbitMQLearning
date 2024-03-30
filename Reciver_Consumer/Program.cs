@@ -6,14 +6,21 @@ var factory = new ConnectionFactory();
 factory.Uri = new Uri("amqp://guest:guest@localhost:5672");
 var connection = factory.CreateConnection();
 var channel = connection.CreateModel();
+
 string QueueName = "zljn7vcbl3t28usw";
+channel.QueueDeclare(QueueName, true, false, false, null);
+channel.BasicQos(0, 1, false);
 var consumer = new EventingBasicConsumer(channel);
 consumer.Received += (sender, args) =>
 {
     var body = args.Body.ToArray();
     var message = Encoding.UTF8.GetString(body);
+    Random random = new Random();
+    int sleep = random.Next(0, 3) * 1000;
+    Console.WriteLine($"Sleep : {sleep} delivery tags {args.DeliveryTag}");
+    Thread.Sleep(sleep);
     Console.WriteLine("Received Message " + message);
-    Thread.Sleep(1);
+    //Thread.Sleep(1);
     /*
      اگر این دستور
     channel.BasicConsume(QueueName, false, consumer);
@@ -27,7 +34,7 @@ consumer.Received += (sender, args) =>
     قطع بشه و برنامه دوباره باز بشه باز از ادامه اطلاعاتی که ارسال نشده باز ارسال ادامه میده
 
      */
-    channel.BasicAck(args.DeliveryTag,true);
+    channel.BasicAck(args.DeliveryTag, true);
 };
 /*
  ## توضیح دستور `channel.BasicConsume(QueueName, false, consumer)` در RabbitMQ
