@@ -1,5 +1,4 @@
 ﻿using RabbitMQ.Client;
-using SayyehBanTools.GenerateValue;
 using System.Text;
 
 var factory = new ConnectionFactory();
