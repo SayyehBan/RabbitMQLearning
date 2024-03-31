@@ -7,16 +7,26 @@ factory.Uri = new Uri("amqp://guest:guest@localhost:5672");
 var connection = factory.CreateConnection();
 var channel = connection.CreateModel();
 string routingKey = "order.*";
-string Exchange = "OrderTopic";
+
+
+string Exchange = "OrderHeader";
 string QueueName = "orderService";
+var headers = new Dictionary<string, object>
+{
+    { "subject","order"},
+    {"action","create" },
+    {"x-match","any" }
+};
+
 channel.QueueDeclare(QueueName, false, true, false);
-channel.QueueBind(QueueName, Exchange, routingKey);
+channel.QueueBind(QueueName, Exchange, "", headers);
 var consumer = new EventingBasicConsumer(channel);
 consumer.Received += (sender, args) =>
 {
     var body = args.Body.ToArray();
     string message = Encoding.UTF8.GetString(body);
-    Console.WriteLine("Received Message " + message);
+    var subject = Encoding.UTF8.GetString(args.BasicProperties.Headers["subject"] as byte[]);
+    Console.WriteLine($" subjext :{subject} Received Message " + message);
 };
 channel.BasicConsume(QueueName, true, consumer);
 

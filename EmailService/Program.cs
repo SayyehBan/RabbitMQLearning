@@ -7,7 +7,7 @@ factory.Uri = new Uri("amqp://guest:guest@localhost:5672");
 var connection = factory.CreateConnection();
 var channel = connection.CreateModel();
 string routingKey = "order.cancel";
-string Exchange = "OrderTopic";
+string Exchange = "OrderHeader";
 string QueueName = "EmailService";
 
 channel.QueueDeclare(QueueName, false, false, false);
