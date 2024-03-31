@@ -7,9 +7,11 @@ factory.Uri = new Uri("amqp://guest:guest@localhost:5672");
 var connection = factory.CreateConnection();
 var channel = connection.CreateModel();
 string Exchange = "Order";
-string QueueName = "order.create";
-channel.QueueDeclare(QueueName, false, true, false);
+string QueueName = "order.Cancel";
+
+channel.QueueDeclare(QueueName, false, false, false);
 channel.QueueBind(QueueName, Exchange, "");
+
 var consumer = new EventingBasicConsumer(channel);
 consumer.Received += (sender, args) =>
 {
@@ -18,5 +20,4 @@ consumer.Received += (sender, args) =>
     Console.WriteLine("Received Message " + message);
 };
 channel.BasicConsume(QueueName, true, consumer);
-
 Console.ReadLine();

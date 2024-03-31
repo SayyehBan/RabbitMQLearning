@@ -7,8 +7,11 @@ var connection = factory.CreateConnection();
 var channel = connection.CreateModel();
 
 string QueueName = "order.create";
-channel.QueueDeclare(QueueName, false, false, false, null);
+
+string Exchange = "Order";
+channel.ExchangeDeclare(Exchange, ExchangeType.Fanout, false);
+
 string message = $"Send Shopping cart Information to place an order timr : {DateTime.Now.Ticks}";
 var body = Encoding.UTF8.GetBytes(message);
-channel.BasicPublish(exchange: "", routingKey:QueueName, basicProperties: null,body);
+channel.BasicPublish(exchange: Exchange, routingKey: "", basicProperties: null, body);
 Console.ReadLine();
