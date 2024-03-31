@@ -1,8 +1,10 @@
 ﻿using RabbitMQ.Client;
+using SayyehBanTools.ConnectionDB;
 using System.Text;
 
 var factory = new ConnectionFactory();
-factory.Uri = new Uri("amqp://guest:guest@localhost:5672");
+Uri connectionUri = RabbitMQConnection.DefaultConnection();
+factory.Uri = new Uri(connectionUri.OriginalString);
 var connection = factory.CreateConnection();
 var channel = connection.CreateModel();
 string QueueName = "zljn7vcbl3t28usw";
